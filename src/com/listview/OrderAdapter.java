@@ -3,6 +3,7 @@ package com.listview;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,10 @@ public class OrderAdapter extends ArrayAdapter<Order> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
+
+        View v = convertView;
+        try
+    	{
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.row, null);
@@ -35,6 +39,12 @@ public class OrderAdapter extends ArrayAdapter<Order> {
                           bt.setText("Status: "+ o.Message);
                     }
             }
-            return v;
+    	}
+    	catch( Exception ex)
+    	{
+    		Log.e("getView", ex.getMessage());
+    		
+    	}
+        return v;
     }
 }

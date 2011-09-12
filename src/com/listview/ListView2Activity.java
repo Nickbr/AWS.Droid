@@ -42,11 +42,10 @@ public class ListView2Activity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
     	try
     	{
+        	Log.v("onCreate", " into");
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
 	        startGetCredentials();
-	        
-	        String o = "Hello branch commit";
 	        
 	        m_orders = new ArrayList<Order>();
 	        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
@@ -66,22 +65,26 @@ public class ListView2Activity extends ListActivity {
     	}
     	catch( Exception ex)
     	{
-    		String g = ex.getMessage(); 
+    		Log.e("onCreate", ex.getMessage());
     	}
+    	Log.v("onCreate", " out of");
     }
     
     private Runnable returnRes = new Runnable() {
 
         @Override
         public void run() {
+        	Log.v("returnRes", " in to");
             if(m_orders != null && m_orders.size() > 0){
+            	
                 m_adapter.notifyDataSetChanged();
                 int arrayUBound = m_orders.size();
-                for(int i=0;i<arrayUBound;i++)
+                for(int i=1;i<arrayUBound;i++)
                 m_adapter.add(m_orders.get(i));
             }
             m_ProgressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
+        	Log.v("returnRes", " out of");
         }
       };
       
@@ -130,7 +133,7 @@ public class ListView2Activity extends ListActivity {
 				getInstance().deleteMessage(dmr);
 			}
 
-            Log.i("ARRAY", ""+ m_orders.size());
+            Log.v("ARRAY", ""+ m_orders.size());
           } 
 			catch (Exception e) { 
             Log.e("BACKGROUND_PROC", e.getMessage());
@@ -176,8 +179,7 @@ public class ListView2Activity extends ListActivity {
 			}
 		}
 		catch( Exception exception){
-			String bob = exception.getMessage();
-			bob = "";
+            Log.e("recieveMessageBodies", exception.getMessage());
 		}
 	}
 	
