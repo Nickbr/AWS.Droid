@@ -46,7 +46,7 @@ public class ListView2Activity extends ListActivity {
 	        setContentView(R.layout.main);
 	        startGetCredentials();
 	        
-	        String o = "Hello";
+	        String o = "Hello second commit";
 	        
 	        m_orders = new ArrayList<Order>();
 	        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
