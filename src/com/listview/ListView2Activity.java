@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -30,7 +29,6 @@ public class ListView2Activity extends ListActivity {
 	private OrderAdapter m_adapter;
 	private Runnable viewOrders;
 
-	private Handler mHandler;
 	private static AmazonSQS simpleQueue = null;
 	private static List<com.amazonaws.services.sqs.model.Message> lastRecievedMessages = null;
 	public static final String QUEUE_URL = "_queue_url"; 
@@ -47,6 +45,9 @@ public class ListView2Activity extends ListActivity {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
 	        startGetCredentials();
+	        
+	        String o = "Hello";
+	        
 	        m_orders = new ArrayList<Order>();
 	        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
 	                setListAdapter(this.m_adapter);
@@ -109,7 +110,6 @@ public class ListView2Activity extends ListActivity {
 				GsonBuilder gsonb = new GsonBuilder();
 				Gson gson = gsonb.create();
 				 
-				JSONObject j;
 				Order mb = null;
 			
 				try
@@ -155,7 +155,6 @@ public class ListView2Activity extends ListActivity {
 				GsonBuilder gsonb = new GsonBuilder();
 				Gson gson = gsonb.create();
 				 
-				JSONObject j;
 				Order mb = null;
 			
 				try
