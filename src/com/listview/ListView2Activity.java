@@ -79,8 +79,9 @@ public class ListView2Activity extends ListActivity {
             	
                 m_adapter.notifyDataSetChanged();
                 int arrayUBound = m_orders.size();
-                for(int i=1;i<arrayUBound;i++)
-                m_adapter.add(m_orders.get(i));
+            	Log.v("arrayUBound", Integer.toString(arrayUBound));
+                for(int i=1;i<=arrayUBound;i++)
+                	m_adapter.add(m_orders.get(i));
             }
             m_ProgressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
@@ -123,8 +124,7 @@ public class ListView2Activity extends ListActivity {
 				{
 				    e.printStackTrace();
 				}
-				
-				//String messageText = mb.Message;
+
 				m_orders.add(mb);
 				DeleteMessageRequest dmr = new DeleteMessageRequest();
 				dmr.setReceiptHandle(m.getReceiptHandle());
@@ -147,6 +147,7 @@ public class ListView2Activity extends ListActivity {
 	public void recieveMessageBodies(String queueUrl){
 		try
 		{
+			Log.v("recieveMessageBodies", " into");
 			ReceiveMessageRequest req = new ReceiveMessageRequest(queueUrl);
 			req.setRequestCredentials(credentials);
 			lastRecievedMessages =  getInstance().receiveMessage(req).getMessages();
@@ -154,6 +155,8 @@ public class ListView2Activity extends ListActivity {
 			for(com.amazonaws.services.sqs.model.Message m : lastRecievedMessages){  
 				
 				String jsonData = jsonEscape(m.getBody());
+
+				Log.v("recieveMessageBodies jsonData", jsonData);
 				
 				GsonBuilder gsonb = new GsonBuilder();
 				Gson gson = gsonb.create();
@@ -166,21 +169,26 @@ public class ListView2Activity extends ListActivity {
 				}
 				catch(Exception e)
 				{
-				    e.printStackTrace();
+				    Log.e("Exception in recieveMessageBodies getting JSON", e.getMessage());
 				}
-				
+
+				Log.v("recieveMessageBodies messageBody", mb.toString());
 				//String messageText = mb.Message;
 				m_orders.add(mb);
+
+				Log.v("recieveMessageBodies messageBody", "Added to collection");
 				DeleteMessageRequest dmr = new DeleteMessageRequest();
 				dmr.setReceiptHandle(m.getReceiptHandle());
 				dmr.setQueueUrl("https://queue.amazonaws.com/484583698755/testqueue");
 				dmr.setRequestCredentials(credentials);
 				getInstance().deleteMessage(dmr);
+				Log.v("recieveMessageBodies messageBody", "Deleted from SQS");
 			}
 		}
 		catch( Exception exception){
-            Log.e("recieveMessageBodies", exception.getMessage());
+            Log.e("Exception in recieveMessageBodies", exception.getMessage());
 		}
+		Log.v("recieveMessageBodies", " out of");
 	}
 	
 
@@ -190,15 +198,31 @@ public class ListView2Activity extends ListActivity {
     }
 	
 	public static String jsonEscape(String str)  {
-	    String intString = str.replace("\n", "").replace("\r", "").replace("\t", "");
-	    String intString4 = intString + "&SubscriptionArn=arn:aws:sns:us-east-1:484583698755:TestTopic:0c97fbe6-e486-445d-8606-e866ff43cb78" + "\"" + "}";
-	    return intString4;
+		String returnString = null;
+		try
+		{
+		    String intString = str.replace("\n", "").replace("\r", "").replace("\t", "");
+		    returnString = intString + "&SubscriptionArn=arn:aws:sns:us-east-1:484583698755:TestTopic:0c97fbe6-e486-445d-8606-e866ff43cb78" + "\"" + "}";
+		}
+		catch( Exception e)
+		{
+			Log.e("Exception in jsonEscape", e.getMessage());			
+		}
+	    return returnString;
 	}
 
 	public static AmazonSQS getInstance() {
-        if ( simpleQueue == null ) {
-		    simpleQueue = new AmazonSQSClient(credentials);
-        }
+		try
+		{
+	        if ( simpleQueue == null ) {
+			    simpleQueue = new AmazonSQSClient(credentials);
+	        }
+		}
+		catch( Exception e)
+		{
+			Log.e("Exception in getInstance", e.getMessage());			
+		}
+		
         return simpleQueue;
 	}
 
@@ -225,8 +249,9 @@ public class ListView2Activity extends ListActivity {
 
     	        }
     	        catch ( Exception exception ) {
-    	            Log.e( "Loading AWS Credentials", exception.getMessage() );
+    	            Log.e( "Exception in startGetCredentials", exception.getMessage() );
     	            credentials_found = false;
+    	            
     	        }
     			//HelloWorldActivity.this.mHandler.post(postResults);
     		}
